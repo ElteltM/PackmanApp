@@ -52,7 +52,7 @@ export default function Navingbar() {
           </Nav>
         </Navbar.Collapse>
       </Container>
-      {isLoggedIn ? (
+      {/* {isLoggedIn ? (
         <div>
           <DropdownButton
             className="pe-3"
@@ -68,7 +68,7 @@ export default function Navingbar() {
         </div>
       ) : (
         ""
-      )}
+      )} */}
     </Navbar>
   );
 }
