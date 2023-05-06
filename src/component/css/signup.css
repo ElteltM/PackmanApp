@@ -1,0 +1,33 @@
+.form-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+
+    
+}
+
+.form-data {
+    border: 2px solid #ffff00 ;
+    border-radius: 70px;
+    padding: 2%;
+}
+
+
+#logo-header {
+    position: absolute;
+    z-index: 999;
+    
+
+}
+#logo {
+    height:55px;
+
+}
+#logo2 {
+    height: 150px;
+}
+
+
+
+
