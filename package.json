@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "proxy": "http://localhost:5000",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@fontsource/press-start-2p": "^4.5.11",
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
