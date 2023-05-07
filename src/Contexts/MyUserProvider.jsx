@@ -46,6 +46,10 @@ const MyUserProvider = ({ children }) => {
     setIsLoggedIn(newValue);
   }
 
+  if (!user.userId) {
+    // Render a loading indicator or placeholder component
+  }
+
   return (
     <MyUser.Provider value={{ user, isLoggedIn ,updateState , updateLogState, logout }}>
       {children}
