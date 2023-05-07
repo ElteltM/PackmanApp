@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { Navbar, Nav, Container, Dropdown, DropdownButton } from "react-bootstrap";
-import { useContext } from "react";
 import MyUser from "../Contexts/MyUser";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import packman from "./imgs/packman.png";
 
 export default function Navingbar() {
@@ -41,7 +40,7 @@ export default function Navingbar() {
           </Nav>
         </Navbar.Collapse>
       </Container>
-      {isLoggedIn && (
+      {isLoggedIn && user?.userId && (
         <div>
           <DropdownButton
             className="pe-3"
