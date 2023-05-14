@@ -105,14 +105,14 @@ export default function Home() {
 
   const fetchData = async () => {
     setIsLoading(true);
-    let response;
+    let fetchResponse;
     try {
       if (isUsed === false)
-        response = await axios.get(`/api/search/${category}/${query}`);
+        fetchResponse = await axios.get(`/api/search/${category}/${query}`);
       else if (isUsed === true)
-        response = await axios.get(`/api/search/used/${category}/${query}`);
-      console.log(response.data);
-      setProducts(response.data.jsonresult);
+        fetchResponse = await axios.get(`/api/search/used/${category}/${query}`);
+      console.log(fetchResponse.data);
+      setProducts(fetchResponse.data.jsonresult);
     } catch (error) {
       console.error(error);
     }
