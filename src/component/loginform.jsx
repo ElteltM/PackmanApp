@@ -131,7 +131,7 @@ const LoginForm = () => {
                 Login
               </Button>
 
-              <div className="d-flex justify-content-center pt-3">
+              <div class="d-flex justify-content-center pt-3">
                 <div id="googleSignIn"></div>
               </div>
             </Form>
