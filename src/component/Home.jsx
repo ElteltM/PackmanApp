@@ -111,7 +111,8 @@ export default function Home() {
         response = await axios.get(`/api/search/${category}/${query}`);
       else if (isUsed === true)
         response = await axios.get(`/api/search/used/${category}/${query}`);
-      setProducts(response.jsonresult);
+      console.log(response.data);
+      setProducts(response.data.jsonresult);
     } catch (error) {
       console.error(error);
     }
