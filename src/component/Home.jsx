@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Form from "react-bootstrap/Form";
-
+import axios from "axios";
 import InputGroup from "react-bootstrap/InputGroup";
 import IconSearch from "./imgs/search";
 import Productcard from "./productcard";
@@ -108,9 +108,9 @@ export default function Home() {
     let response;
     try {
       if (isUsed === false)
-        response = await fetch(`/api/search/${category}/${query}`);
+        response = await axios.get(`/api/search/${category}/${query}`);
       else if (isUsed === true)
-        response = await fetch(`/api/search/used/${category}/${query}`);
+        response = await axios.get(`/api/search/used/${category}/${query}`);
 
       const jsonData = await response.json();
       setProducts(jsonData.jsonresult);
