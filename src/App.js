@@ -77,7 +77,7 @@ function App() {
   useEffect(() => {
     console.log(isLoggedIn);
     if (!isLoggedIn) { // Check if user is not logged in
-      googleClientLogin();
+      //googleClientLogin();
     }
   }, [isLoggedIn]);
 
