@@ -116,9 +116,16 @@ export default function Home() {
     let fetchResponse;
     try {
       if (isUsed === false)
-        fetchResponse = await axios.get(`/api/search/${category}/${query}`);
+        fetchResponse = await fetch(`/api/search/${category}/${query}`);
+        // {
+        //   method: 'GET',
+        //   headers: {
+        //     authorization: youKEY,
+        //     Accept: 'application/json',
+        //   },
+        // }
       else if (isUsed === true)
-        fetchResponse = await axios.get(`/api/search/used/${category}/${query}`);
+        fetchResponse = await fetch(`/api/search/${category}/${query}`);
       console.log(fetchResponse.data);
       setProducts(fetchResponse.data.jsonresult);
     } catch (error) {
