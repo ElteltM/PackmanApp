@@ -119,7 +119,7 @@ export default function Home() {
         fetchResponse = await fetch(`/api/search/${category}/${query}`,        {
           method: 'GET',
           headers: {
-            "X-Requested-With": "XMLHttpRequest",
+            Origin: 'https://packman-app.vercel.app/',
             Accept: 'application/json',
           },
         });
