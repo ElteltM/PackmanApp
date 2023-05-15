@@ -117,7 +117,8 @@ export default function Home() {
     try {
       if (isUsed === false)
       fetchResponse = await axios.get(`/api/search/${category}/${query}`,
-      {
+      {          
+        method: 'GET',
         headers: {
           "X-Requested-With": "XMLHttpRequest"
         },
