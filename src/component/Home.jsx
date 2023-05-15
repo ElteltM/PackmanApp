@@ -118,7 +118,6 @@ export default function Home() {
       if (isUsed === false)
         fetchResponse = await axios.get(`https://cors-anywhere.herokuapp.com/http://35.180.253.216/api/search/${category}/${query}`,{
           headers: {
-            Origin: 'https://packman-app.vercel.app/',
             Accept: 'application/json',
             "X-Requested-With": "XMLHttpRequest"
           },
@@ -127,7 +126,6 @@ export default function Home() {
       else if (isUsed === true)
       fetchResponse = await axios.get(`https://cors-anywhere.herokuapp.com/http://35.180.253.216/api/search/used/${category}/${query}`,{
         headers: {
-          Origin: 'https://packman-app.vercel.app/',
           Accept: 'application/json',
           "X-Requested-With": "XMLHttpRequest"
         },
