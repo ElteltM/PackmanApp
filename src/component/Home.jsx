@@ -116,20 +116,25 @@ export default function Home() {
     let fetchResponse;
     try {
       if (isUsed === false)
-        fetchResponse = await axios.get(`https://cors-anywhere.herokuapp.com/http://35.180.253.216/api/search/${category}/${query}`,{
-          headers: {
-            Accept: 'application/json',
-            "X-Requested-With": "XMLHttpRequest"
-          },
-        });
-
-      else if (isUsed === true)
-      fetchResponse = await axios.get(`https://cors-anywhere.herokuapp.com/http://35.180.253.216/api/search/used/${category}/${query}`,{
+      fetchResponse = await axios.get(`/api/search/${category}/${query}`,
+      {
         headers: {
+          Origin: 'https://packman-app.vercel.app/',
           Accept: 'application/json',
           "X-Requested-With": "XMLHttpRequest"
         },
-      });      console.log(fetchResponse.data);
+      });
+
+      else if (isUsed === true)
+      fetchResponse = await axios.get(`/api/search/used/${category}/${query}`,
+      {
+        headers: {
+          Origin: 'https://packman-app.vercel.app/',
+          Accept: 'application/json',
+          "X-Requested-With": "XMLHttpRequest"
+        },
+      });  
+      console.log(fetchResponse.data);
       setProducts(fetchResponse.data.jsonresult);
     } catch (error) {
       console.error(error);
