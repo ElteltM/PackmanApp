@@ -116,7 +116,7 @@ export default function Home() {
     let fetchResponse;
     try {
       if (isUsed === false)
-        fetchResponse = await axios.get(`/api/search/${category}/${query}`,{
+        fetchResponse = await axios.get(`https://cors-anywhere.herokuapp.com/http://35.180.253.216/api/search/${category}/${query}`,{
           method: 'GET',
           headers: {
             Origin: 'https://packman-app.vercel.app/',
