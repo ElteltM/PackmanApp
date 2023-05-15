@@ -12,7 +12,7 @@ import { Row } from "react-bootstrap";
 
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-//axios.defaults.baseURL = 'https://cors-anywhere.herokuapp.com/http://35.180.253.216/';
+axios.defaults.baseURL = 'https://cors-anywhere.herokuapp.com/http://35.180.253.216';
 
 const categories = {
   clothingMen: "Clothing and Fashion (Men)",
@@ -116,11 +116,10 @@ export default function Home() {
     let fetchResponse;
     try {
       if (isUsed === false)
-        fetchResponse = await axios.get(`https://cors-anywhere.herokuapp.com/http://35.180.253.216/api/search/${category}/${query}`,
+        fetchResponse = await axios.get(`/api/search/${category}/${query}`,
         {
           headers: {
             Origin: 'https://packman-app.vercel.app/',
-            Accept: 'application/json',
             "X-Requested-With": "XMLHttpRequest"
           },
         });
