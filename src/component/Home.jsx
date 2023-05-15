@@ -3,6 +3,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
+
 import InputGroup from "react-bootstrap/InputGroup";
 import IconSearch from "./imgs/search";
 import Productcard from "./productcard";
@@ -11,6 +12,7 @@ import { Row } from "react-bootstrap";
 
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+axios.defaults.baseURL = 'http://35.180.253.216'; // Replace with your API domain
 
 const categories = {
   clothingMen: "Clothing and Fashion (Men)",
