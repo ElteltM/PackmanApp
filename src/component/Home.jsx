@@ -119,8 +119,6 @@ export default function Home() {
       fetchResponse = await axios.get(`/api/search/${category}/${query}`,
       {
         headers: {
-          Origin: 'https://packman-app.vercel.app/',
-          Accept: 'application/json',
           "X-Requested-With": "XMLHttpRequest"
         },
       });
@@ -129,8 +127,6 @@ export default function Home() {
       fetchResponse = await axios.get(`/api/search/used/${category}/${query}`,
       {
         headers: {
-          Origin: 'https://packman-app.vercel.app/',
-          Accept: 'application/json',
           "X-Requested-With": "XMLHttpRequest"
         },
       });  
