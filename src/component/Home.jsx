@@ -12,7 +12,7 @@ import { Row } from "react-bootstrap";
 
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-axios.defaults.baseURL = 'http://35.180.253.216'; // Replace with your API domain
+axios.defaults.baseURL = 'https://cors-anywhere.herokuapp.com/http://35.180.253.216/';
 
 const categories = {
   clothingMen: "Clothing and Fashion (Men)",
@@ -116,14 +116,14 @@ export default function Home() {
     let fetchResponse;
     try {
       if (isUsed === false)
-        fetchResponse = await fetch(`/api/search/${category}/${query}`);
-        // {
-        //   method: 'GET',
-        //   headers: {
-        //     authorization: youKEY,
-        //     Accept: 'application/json',
-        //   },
-        // }
+        fetchResponse = await fetch(`/api/search/${category}/${query}`,        {
+          method: 'GET',
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            Accept: 'application/json',
+          },
+        });
+
       else if (isUsed === true)
         fetchResponse = await fetch(`/api/search/${category}/${query}`);
       console.log(fetchResponse.data);
