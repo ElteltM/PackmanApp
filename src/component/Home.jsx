@@ -116,16 +116,17 @@ export default function Home() {
     let fetchResponse;
     try {
       if (isUsed === false)
-        fetchResponse = await fetch(`/api/search/${category}/${query}`,        {
-          method: 'GET',
+        fetchResponse = await axios.get(`/api/search/${category}/${query}`,
+        {
           headers: {
             Origin: 'https://packman-app.vercel.app/',
             Accept: 'application/json',
+            "X-Requested-With": "XMLHttpRequest"
           },
         });
 
       else if (isUsed === true)
-        fetchResponse = await fetch(`/api/search/${category}/${query}`);
+        fetchResponse = await axios.get(`/api/search/${category}/${query}`);
       console.log(fetchResponse.data);
       setProducts(fetchResponse.data.jsonresult);
     } catch (error) {
