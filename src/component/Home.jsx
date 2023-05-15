@@ -43,12 +43,15 @@ export default function Home() {
   useEffect(() => {
     const uniqueStores = [];
     try {
-      filteredProducts.forEach((product) => {
-        if (!uniqueStores.includes(product.Shop)) {
-          uniqueStores.push(product.Shop);
-        }
-      });
-      setNumbersOfSites(uniqueStores.length);
+      if(filteredProducts){
+        filteredProducts.forEach((product) => {
+          if (!uniqueStores.includes(product.Shop)) {
+            uniqueStores.push(product.Shop);
+          }
+        });
+        setNumbersOfSites(uniqueStores.length);
+      }
+
     } catch (error) {
       console.log(error);
     }
@@ -57,13 +60,16 @@ export default function Home() {
   useEffect(() => {
     const uniqueStores = [];
     try {
-      products.forEach((product) => {
-        if (!uniqueStores.includes(product.Shop)) {
-          uniqueStores.push(product.Shop);
-        }
-      });
-      let x = [...Stores, ...uniqueStores];
-      setStores([...new Set(x)]);
+      if(products){
+        products.forEach((product) => {
+          if (!uniqueStores.includes(product.Shop)) {
+            uniqueStores.push(product.Shop);
+          }
+        });
+        let x = [...Stores, ...uniqueStores];
+        setStores([...new Set(x)]);
+      }
+
     } catch (error) {
       console.log(error);
     }
