@@ -12,7 +12,7 @@ import { Row } from "react-bootstrap";
 
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-axios.defaults.baseURL = 'https://cors-anywhere.herokuapp.com/http://35.180.253.216/';
+axios.defaults.baseURL = 'https://cors-anywhere.herokuapp.com/http://15.236.91.132/';
 
 const categories = {
   clothingMen: "Clothing and Fashion (Men)",
@@ -118,7 +118,6 @@ export default function Home() {
       if (isUsed === false)
       fetchResponse = await axios.get(`/api/search/${category}/${query}`,
       {          
-        method: 'GET',
         headers: {
           "X-Requested-With": "XMLHttpRequest"
         },

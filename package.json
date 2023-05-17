@@ -1,7 +1,7 @@
 {
   "name": "pacmanprj",
   "version": "0.1.0",
-  "proxy": "http://35.180.253.216",
+  "proxy": "http://15.236.91.132",
   "dependencies": {
     "@fontsource/press-start-2p": "^4.5.11",
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
