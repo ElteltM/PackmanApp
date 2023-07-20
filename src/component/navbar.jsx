@@ -65,7 +65,7 @@ export default function Navingbar() {
             <div>
               <DropdownButton
                 className="pe-3 ps-4"
-                title={user.name}
+                //title={user.name}
                 variant="primary"
                 onSelect={(eventKey) => handleOptionClick(eventKey)}
               >
