@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Navbar,
   Nav,
@@ -8,14 +8,15 @@ import {
 } from "react-bootstrap";
 import { useContext } from "react";
 import MyUser from "../Contexts/MyUser";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import packman from "./imgs/packman.png";
+import NotificationsBell from "./notifications";
 
 export default function Navingbar() {
-  const { user, isLoggedIn, logout } = useContext(MyUser); //want to access the global variables user,isLoggedIn in this component
+  const { user, isLoggedIn, isUserSaved, logout } = useContext(MyUser); //want to access the global variables user,isLoggedIn in this component
 
   const handleOptionClick = (option) => {
-    console.log(`Selected ${option}`);
+    // console.log(`Selected ${option}`);
     if (option === "LOGOUT") logout();
   };
 
@@ -24,7 +25,9 @@ export default function Navingbar() {
       <Container>
         <Navbar.Brand>
           {" "}
-          <img src={packman} className="navbar-logo" alt="pacman logo" />{" "}
+          <Nav.Link as={Link} to="/">
+            <img src={packman} className="navbar-logo" alt="pacman logo" />{" "}
+          </Nav.Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbar-nav" />
         <Navbar.Collapse id="navbar-nav">
@@ -32,6 +35,7 @@ export default function Navingbar() {
             <Nav.Link as={Link} to="/" className="Font navbar-text">
               Home
             </Nav.Link>
+
             {isLoggedIn ? (
               ""
             ) : (
@@ -46,27 +50,36 @@ export default function Navingbar() {
                 Signup
               </Nav.Link>
             )}
-            <Nav.Link as={Link} to="/team" className="Font navbar-text">
-              Team
+            <Nav.Link as={Link} to="/about" className="Font navbar-text">
+              About
             </Nav.Link>
+
+            {/* <Nav.Link as={Link} to="/notifications" className="Font navbar-text">
+              Notifications
+            </Nav.Link> */}
           </Nav>
         </Navbar.Collapse>
+        <Navbar.Collapse className="justify-content-end">
+          {isLoggedIn && isUserSaved ? <NotificationsBell /> : ""}
+          {isLoggedIn && isUserSaved ? (
+            <div>
+              <DropdownButton
+                className="pe-3 ps-4"
+                title={user.name}
+                variant="primary"
+                onSelect={(eventKey) => handleOptionClick(eventKey)}
+              >
+                <Dropdown.Item as={Link} to="/fav">
+                  Favourites
+                </Dropdown.Item>
+                <Dropdown.Item eventKey="LOGOUT">Logout</Dropdown.Item>
+              </DropdownButton>
+            </div>
+          ) : (
+            ""
+          )}
+        </Navbar.Collapse>
       </Container>
-      {isLoggedIn && user?.userId && (
-        <div>
-          <DropdownButton
-            className="pe-3"
-            title={user.name}
-            variant="primary"
-            onSelect={(eventKey) => handleOptionClick(eventKey)}
-          >
-            <Dropdown.Item as={Link} to="/fav">
-              Favourites
-            </Dropdown.Item>
-            <Dropdown.Item eventKey="LOGOUT">Logout</Dropdown.Item>
-          </DropdownButton>
-        </div>       
-      )}
     </Navbar>
   );
 }

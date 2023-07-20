@@ -2,35 +2,37 @@ import React, { useState, useEffect } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Form from "react-bootstrap/Form";
-import axios from "axios";
-
+import Offcanvas from "react-bootstrap/Offcanvas";
+import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
-import IconSearch from "./imgs/search";
 import Productcard from "./productcard";
 import "./css/style.css";
 import { Row } from "react-bootstrap";
-
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-axios.defaults.baseURL = 'https://cors-anywhere.herokuapp.com/http://15.236.91.132/';
+import MicOff from "./imgs/micoff";
+import MicOn from "./imgs/micon";
 
 const categories = {
   clothingMen: "Clothing and Fashion (Men)",
   clothingWomen: "Clothing and Fashion (Women)",
+  clothingKids: "Clothing and Fashion (Kids)",
   cosmetics: "Cosmetics and Bodycare",
   electronics: "Electronics and Devices",
   furniture: "Furnitures and Decor",
   grocery: "Groceries and Supplies",
   toys: "Toys and Games",
   videogames: "Consoles and Videogames",
-  // computerhardware: "Computer Hardware",
-  // supplements: "Vitamins and Supplements",
-  other: "Other (longer search)",
+  computerhardware: "Computer Hardware",
+  supplements: "Vitamins and Supplements",
+  circuits: "Circuits and Components",
 };
 export default function Home() {
   const [products, setProducts] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Category");
   const [sorting, setSorting] = useState("Sort");
   const [isUsed, setIsUsed] = useState(false);
@@ -42,38 +44,68 @@ export default function Home() {
   const [Stores, setStores] = useState(["All"]);
   const [selectedStore, setSelectedStore] = useState("All");
 
+  // voice to text start
+  const { transcript, resetTranscript } = useSpeechRecognition();
+  const [isTyping, setIsTyping] = useState(false);
+  const [query, setQuery] = useState("");
+  const [isTalking, setIsTalking] = useState(false);
+
+  const handleStartListening = () => {
+    setIsTyping(false);
+    SpeechRecognition.startListening({ continuous: true });
+  };
+
+  const handleStopListening = () => {
+    SpeechRecognition.stopListening();
+    if (!isTyping && transcript) {
+      setQuery(transcript);
+      resetTranscript();
+    }
+  };
+
+  const handleButtonPress = () => {
+    setIsTyping(false);
+    setIsTalking(true);
+    handleStartListening();
+  };
+
+  const handleButtonRelease = () => {
+    setIsTalking(false);
+    handleStopListening();
+  };
+
+  const handleChange = (event) => {
+    setQuery(event.target.value);
+    setIsTyping(true);
+  };
+
+  // voice to text end
+
   useEffect(() => {
     const uniqueStores = [];
     try {
-      if(filteredProducts){
-        filteredProducts.forEach((product) => {
-          if (!uniqueStores.includes(product.Shop)) {
-            uniqueStores.push(product.Shop);
-          }
-        });
-        setNumbersOfSites(uniqueStores.length);
-      }
-
+      filteredProducts.forEach((product) => {
+        if (!uniqueStores.includes(product.Shop)) {
+          uniqueStores.push(product.Shop);
+        }
+      });
+      setNumbersOfSites(uniqueStores.length);
     } catch (error) {
-      console.log(error);
+      // console.log(error); do nothing
     }
   }, [filteredProducts]);
 
   useEffect(() => {
     const uniqueStores = [];
     try {
-      if(products){
-        products.forEach((product) => {
-          if (!uniqueStores.includes(product.Shop)) {
-            uniqueStores.push(product.Shop);
-          }
-        });
-        let x = [...Stores, ...uniqueStores];
-        setStores([...new Set(x)]);
-      }
-
+      products.forEach((product) => {
+        if (!uniqueStores.includes(product.Shop)) {
+          uniqueStores.push(product.Shop);
+        }
+      });
+      setStores([["All"], ...uniqueStores]);
     } catch (error) {
-      console.log(error);
+      // console.log(error); do nothing
     }
   }, [products]);
 
@@ -113,30 +145,26 @@ export default function Home() {
 
   const fetchData = async () => {
     setIsLoading(true);
-    let fetchResponse;
+    let method;
+    if (isTyping) {
+      method = query;
+    } else {
+      method = transcript;
+    }
+    let response;
     try {
       if (isUsed === false)
-      fetchResponse = await axios.get(`/api/search/${category}/${query}`,
-      {          
-        headers: {
-          "X-Requested-With": "XMLHttpRequest"
-        },
-      });
-
+        response = await fetch(`/api/search/${category}/${method}`);
       else if (isUsed === true)
-      fetchResponse = await axios.get(`/api/search/used/${category}/${query}`,
-      {
-        headers: {
-          "X-Requested-With": "XMLHttpRequest"
-        },
-      });  
-      console.log(fetchResponse.data);
-      setProducts(fetchResponse.data.jsonresult);
+        response = await fetch(`/api/search/used/${category}/${method}`);
+
+      const jsonData = await response.json();
+      setProducts(jsonData.jsonresult);
     } catch (error) {
       console.error(error);
     }
-    console.log(products);
-    console.log(`${query} ${category}`);
+    // console.log(products);
+    // console.log(`${query} ${category}`);
     setIsLoading(false);
   };
 
@@ -194,6 +222,11 @@ export default function Home() {
     }
   }
 
+  // filter
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   return (
     <div className="">
       {!products && (
@@ -212,12 +245,19 @@ export default function Home() {
                   className=""
                   placeholder="Search..."
                   aria-label="Text input with dropdown button"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
+                  value={isTyping ? query : transcript}
+                  onChange={handleChange}
                 />
               </div>
               <div className="col-md-auto">
-                <IconSearch className="mt-2 ms-2" />
+                <button
+                  onMouseDown={handleButtonPress}
+                  onMouseUp={handleButtonRelease}
+                  disabled={isTyping}
+                  className="ms-1"
+                >
+                  {isTalking ? <MicOn /> : <MicOff />}
+                </button>
               </div>
               <div className="col-12 col-md-auto">
                 <button
@@ -279,10 +319,17 @@ export default function Home() {
                   className=""
                   placeholder={query}
                   aria-label="Text input with dropdown button"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
+                  value={isTyping ? query : transcript}
+                  onChange={handleChange}
                 />
-                <IconSearch className="mt-2 ms-2" />
+                <button
+                  onMouseDown={handleButtonPress}
+                  onMouseUp={handleButtonRelease}
+                  disabled={isTyping}
+                  className="ms-1"
+                >
+                  {isTalking ? <MicOn /> : <MicOff />}
+                </button>
               </InputGroup>
             </div>
             <div className="col-lg-3 col-md-auto">
@@ -329,43 +376,45 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="row pt-3 justify-content-center">
-            <div>
-              <div  style={{position: "absolute",top: 320,right: 5,width: "15%",height: "100vh"}}>
-              <DropdownButton
-              title={sorting}
-              id="sort"
-              onSelect={handleSorting}
-              align="end"
-            >
-              <Dropdown.Item eventKey="A-Z">A-Z</Dropdown.Item>
-              <Dropdown.Item eventKey="Z-A">Z-A</Dropdown.Item>
-              <Dropdown.Item eventKey="Price ↑">Price ↑</Dropdown.Item>
-              <Dropdown.Item eventKey="Price ↓">Price ↓</Dropdown.Item>
-            </DropdownButton>
-            <br />
-                <p>Price Range</p>
-                <Slider
-                  min={minPrice}
-                  max={maxPrice}
-                  range
-                  defaultValue={[minPrice, maxPrice]}
-                  value={priceRange}
-                  onChange={handlePriceChange}
-                />
-                <div >
-                  {/* <span>{`${priceRange} EGP `}</span> */}
-                  <span>[{priceRange[0]}-{priceRange[1]}] EGP</span>
-                </div>
+          <Button variant="primary" onClick={handleShow}>
+            Show Filter
+          </Button>
+          <Offcanvas className="Font bg-dark" show={show} onHide={handleClose}>
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title>Filter</Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+              <div className="filter">
                 <div className="row">
-                  <div className="col" >
-                  <br/>
-                  <p>Website:</p>
+                  <div className="col-12">
+                    <p>Price Range</p>
+                  </div>
+                  <div className="col-12">
+                    <Slider
+                      min={minPrice}
+                      max={maxPrice}
+                      range
+                      defaultValue={[minPrice, maxPrice]}
+                      value={priceRange}
+                      onChange={handlePriceChange}
+                    />
+                    <span>
+                      [{priceRange[0]}-{priceRange[1]}] EGP
+                    </span>
+                  </div>
+                </div>
+
+                <div className="row mt-3">
+                  <div className="col-6">
+                    <p>Website:</p>
+                  </div>
+                  <div className="col-6">
                     <DropdownButton
                       title={selectedStore}
                       id="store"
                       onSelect={handleSelectedStore}
                       align="end"
+                      className="btn-sm"
                     >
                       {Stores.map((store) => (
                         <Dropdown.Item className="text-resp" eventKey={store}>
@@ -376,12 +425,32 @@ export default function Home() {
                   </div>
                 </div>
 
-                <button className="btn btn-success mt-3" onClick={filter}>
-                  filter
-                </button>
+                <div className="row mt-3">
+                  <div className="col-6">
+                    <p>Sort By:</p>
+                  </div>
+                  <div className="col-6">
+                    <DropdownButton
+                      title={sorting}
+                      id="sort"
+                      onSelect={handleSorting}
+                      align="end"
+                    >
+                      <Dropdown.Item eventKey="A-Z">A-Z</Dropdown.Item>
+                      <Dropdown.Item eventKey="Z-A">Z-A</Dropdown.Item>
+                      <Dropdown.Item eventKey="Price ↑">Price ↑</Dropdown.Item>
+                      <Dropdown.Item eventKey="Price ↓">Price ↓</Dropdown.Item>
+                    </DropdownButton>
+                  </div>
+                </div>
+                <div className="row text-center">
+                  <button className="btn btn-success mt-3" onClick={filter}>
+                    filter
+                  </button>
+                </div>
               </div>
-            </div>
-          </div>
+            </Offcanvas.Body>
+          </Offcanvas>
 
           <div className="row pt-5">
             <div className="col-12">
@@ -393,7 +462,7 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <Row xs={1} md={4} className="g-4">
+          <Row sm={1} md={3} lg={4} className="g-4">
             {filteredProducts.map((product) => (
               <Productcard product={product} />
             ))}
